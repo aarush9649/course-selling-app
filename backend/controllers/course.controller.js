@@ -3,9 +3,7 @@
 import { Course } from "../models/course.model.js";
 
 export const createCourse= async(req,res)=>{
-    const {title,description,price,image}=req.body;
-
- debug 
+    const {title,description,price,image}=req.body; 
     try{
 if( !title || !description || !price || !image){
     return res.status(400).json({errors:"Please provide all required fields"});
