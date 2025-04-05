@@ -39,6 +39,14 @@ import {createRoot} from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
-createRoot(document.getElementById('root')).render(
-  <BrowserRouter><App/> </BrowserRouter>
-)
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from "@stripe/react-stripe-js";
+const stripePromise=loadStripe("pk_test_51R8zaWChRNJW2MzptVW97zeggJBe50KYZUFwRSnoPyFuKTf5dBXzbeSL5SMqIJHxKRLyaLu4xxi6Jh660isMDoXY00fYp3OGfK")
+
+createRoot(document.getElementById("root")).render(
+  <Elements stripe={stripePromise}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Elements>
+);

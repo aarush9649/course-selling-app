@@ -39,21 +39,26 @@ function Purchases() {
 
   // Fetch purchases
   useEffect(() => {
+    const user=JSON.parse(localStorage.getItem('user'));
+    const token = user.token;
     const fetchPurchases = async () => {
-      try {
-        const response = await axios.get( "http://localhost:4001/api/v1/user/purchases", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        });
-        setPurchase(response.data.courseData);
-      } catch (error) {
-        setErrorMessage("Failed to fetch purchase data");
+      if(!token) {
+        setErrorMessage("please login to purchase the course");
       }
+        try {
+            const response = await axios.get("http://localhost:4001/api/v1/user/purchases", {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            
+            setPurchase(response.data.courseData); // 👈 Ye state update karega
+        } catch (error) {
+            setErrorMessage("Failed to fetch purchase data");
+        }
     };
     fetchPurchases();
-  }, []);
+}, []);
+
 
   // Logout
   const handleLogout = async () => {

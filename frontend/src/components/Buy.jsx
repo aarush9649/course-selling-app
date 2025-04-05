@@ -60,6 +60,7 @@ function Buy() {
   };
 
   const handlePurchase = async (event) => {
+
     event.preventDefault();
 
     if (!stripe || !elements) {
@@ -120,9 +121,10 @@ function Buy() {
         status: paymentIntent.status,
       };
       console.log("Payment info: ", paymentInfo);
-      
+      toast.success("Payment Successful");
+     navigate("/purchases");
       try {
-        await axios.post(`${BACKEND_URL}/order`, paymentInfo, {
+        await axios.post("http://localhost:4001/api/v1/order", paymentInfo, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -199,6 +201,9 @@ function Buy() {
                 </form>
                 {cardError && <p className="text-red-500 font-semibold text-xs">{cardError}</p>}
               </div>
+              <button className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition duration-200 mt-3 flex items-center justify-center">
+                <span className="mr-2">🅿️</span> Other Payments Method
+              </button>
             </div>
           </div>
         </div>
