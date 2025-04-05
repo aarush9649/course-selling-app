@@ -94,23 +94,32 @@ export const logout = (req, res) => {
 };
 
 export const purchases = async (req, res) => {
-  const userId = req.userId;
+  const userId = req.userId; // Ensure userMiddleware is setting this properly
+
+  if (!userId) {
+    return res.status(401).json({ errors: "Unauthorized: No user ID found" });
+  }
 
   try {
+    // Fetch purchased courses for the user
     const purchased = await Purchase.find({ userId });
 
-    let purchasedCourseId = [];
+    console.log("Purchased courses:", purchased); // Debugging
 
-    for (let i = 0; i < purchased.length; i++) {
-      purchasedCourseId.push(purchased[i].courseId);
-    } 
-    const courseData = await Course.find({
-      _id: { $in: purchasedCourseId },
-    });
+    if (!purchased.length) {
+      return res.status(200).json({ message: "No purchases found", courseData: [] });
+    }
+
+    let purchasedCourseId = purchased.map((p) => p.courseId);
+
+    // Fetch course details
+    const courseData = await Course.find({ _id: { $in: purchasedCourseId } });
+
+    console.log("Fetched course data:", courseData); // Debugging
 
     res.status(200).json({ purchased, courseData });
   } catch (error) {
-    res.status(500).json({ errors: "Error in purchases" });
-    console.log("Error in purchase", error);
+    console.error("Error in fetching purchases:", error);
+    res.status(500).json({ errors: "Internal server error in purchases" });
   }
 };

@@ -8,7 +8,7 @@ import userRoute from './routes/user.route.js';
 import adminRoute from "./routes/admin.route.js";
 
 import cors from 'cors';
-// import orderRoute from "./routes/order.route.js";
+import orderRoute from "./routes/order.route.js";
 
 
 import fileUpload from 'express-fileupload'
@@ -49,7 +49,7 @@ console.log(`Error connecting to MongoDB: ${error.message}`);
 app.use("/api/v1/courses",courseRoutes);
 app.use("/api/v1/user",userRoute);
 app.use("/api/v1/admin",adminRoute);
-// app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/order", orderRoute);
 
 
   // Configuration

@@ -122,20 +122,38 @@ export const getCourses=async(req,res)=>{
   }
 }
 
-export const courseDetails=async(req,res)=>{
-  const {courseId}=req.params;
-  try{
-    const course=await Course.findById(courseId);
-    if(!course){
-      return res.status(404).json({error:"Course not found"});
+// export const courseDetails=async(req,res)=>{
+//   const {courseId}=req.params;
+//   try{
+//     const course=await Course.findById(courseId);
+//     if(!course){
+//       return res.status(404).json({error:"Course not found"});
+//     }
+//     res.status(200).json({course});
+//   }
+//   catch(error){
+//     res.status(500).json({errors:"error fetching course details"})
+//     console.log("Error in course fetching course details",error);
+//   }
+// };
+
+
+export const courseDetails = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    console.log("Received course ID:", courseId); // 🧪 TESTING
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
     }
-    res.status(200).json({course});
-  }
-  catch(error){
-    res.status(500).json({errors:"error fetching course details"})
-    console.log("Error in course fetching course details",error);
+
+    res.status(200).json({ success: true, course });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 export const buyCourse = async (req, res) => {
   const { userId } = req;
@@ -193,6 +211,9 @@ export const buyCourses = async (req, res) => {
       currency: "usd",
       payment_method_types: ["card"],
     });
+
+    const newPurchase=new Purchase({userId,courseId});
+    await newPurchase.save();
 
     res.status(201).json({
       message: "Course purchased successfully",
